@@ -24,13 +24,13 @@ class SearchType extends AbstractType
                 'class' =>'form-control-sm'
             ]
         ])
-        /*->add('$categories', EntityType::class, [
+        ->add('categories', EntityType::class, [
             'label' => false,
             'required' => false,
             'class' => Category::class,
             'multiple' => true,
             'expanded' => true
-        ])*/
+        ])
         ->add('submit', SubmitType::class, [
             'label' => 'Filtrer',
             'attr' => [
