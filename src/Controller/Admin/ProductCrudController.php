@@ -27,11 +27,11 @@ class ProductCrudController extends AbstractCrudController
             TextField::new('name'),
             SlugField::new('slug')->setTargetFieldName('name'),
             TextField::new('subtitle'),
-            /*ImageField::new('illustration')
+            ImageField::new('illustration')
             ->setBasePath('uploads/')
             ->setUploadDir('public/uploads')
             ->setUploadedFileNamePattern('[randomhash].[extension]')
-            ->setRequired(false),*/
+            ->setRequired(false),
             TextareaField::new('description'),
             MoneyField::new('price')->setCurrency('EUR'),
             AssociationField::new('category')

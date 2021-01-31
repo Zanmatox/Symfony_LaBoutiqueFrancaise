@@ -40,10 +40,7 @@ class SearchType extends AbstractType
         ;
     }
 
-
-
-
-    public function configureOption(optionResolver $resolver)
+    public function configureOption(OptionResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Search::class, 
