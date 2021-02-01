@@ -9,10 +9,21 @@ use App\Form\OrderType;
 use App\Classe\Cart;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Order;
+use App\Entity\OrderDetails;
+use Doctrine\ORM\EntityManagerInterface;
 
 
 class OrderController extends AbstractController
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+$this->entityManager = $entityManager;
+    }
+
+
+
     /**
      * @Route("/commande", name="order")
      */
@@ -33,7 +44,7 @@ class OrderController extends AbstractController
     }
     
     /**
-     * @Route("/commande/recapitulatif", name="order_recap")
+     * @Route("/commande/recapitulatif", name="order_recap", methods={"POST"})
      */
     public function add(Cart $cart, Request $request): Response
     { 
@@ -59,7 +70,7 @@ class OrderController extends AbstractController
             $delivery_content .= '<br/>'.$delivery->getPostal().' '.$delivery->getCity();
             $delivery_content .= '<br/>'.$delivery->getCountry();
 
-
+            // Enregistrer ma commande Order()
             $order = new Order();
             $order->setUser($this->getUser());
             $order->setCreatedAt($date);
@@ -68,16 +79,30 @@ class OrderController extends AbstractController
             $order->setDelivery($delivery_content);
             $order->setIsPaid(0);
 
+            $this->entityManager->persist($order);
+            
+            
+            // Enregistrer mes produis OrderDetails()
             foreach ($cart->getFull() as $product) {
-                dd($product);
+                $orderDetails = new OrderDetails();
+                $orderDetails->setMyOrder($order);
+                $orderDetails->setProduct($product['product']->getName());
+                $orderDetails->setQuantity($product['quantity']);
+                $orderDetails->setPrice($product['product']->getPrice());
+                $orderDetails->setTotal($product['product']->getPrice() * $product['quantity']);
+                $this->entityManager->persist($orderDetails);
             }
-
-
-
+            
+            //$this->entityManager->flush();
+              
+            return $this->render('order/add.html.twig', [
+                'cart' => $cart->getFull(),
+                'carrier' => $carriers,
+                'delivery' => $delivery_content
+    
+            ]);
         }
-
-        return $this->render('order/add.html.twig', [
-            'cart' => $cart->getFull()
-        ]);
+        return $this->redirectToRoute('cart');
     }
+
 }  
