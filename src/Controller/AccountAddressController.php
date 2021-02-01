@@ -9,6 +9,7 @@ use App\Entity\Address;
 use App\Form\AddressType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Classe\Cart;
 
 class AccountAddressController extends AbstractController
 {
@@ -30,7 +31,7 @@ class AccountAddressController extends AbstractController
     /**
      * @Route("/compte/ajouter-une-adresse", name="account_address_add")
      */
-    public function add(Request $request): Response
+    public function add(Cart $cart, Request $request): Response
     {
         $address = new Address();
         $form = $this->createForm(AddressType::class, $address);
@@ -40,7 +41,11 @@ class AccountAddressController extends AbstractController
             $address->setUser($this->getUser());
             $this->entityManager->persist($address);
             $this->entityManager->flush();
-            return $this->redirectToRoute('account_address');
+            if ($cart->get()) {
+                return $this->redirectToRoute('order');
+            } else {
+                return $this->redirectToRoute('account_address');
+            }
         }
 
         return $this->render('account/address_form.html.twig', [
