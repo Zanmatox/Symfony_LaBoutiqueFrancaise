@@ -13,6 +13,7 @@ use App\Entity\OrderDetails;
 use Doctrine\ORM\EntityManagerInterface;
 
 
+
 class OrderController extends AbstractController
 {
     private $entityManager;
@@ -81,7 +82,6 @@ $this->entityManager = $entityManager;
 
             $this->entityManager->persist($order);
             
-            
             // Enregistrer mes produis OrderDetails()
             foreach ($cart->getFull() as $product) {
                 $orderDetails = new OrderDetails();
@@ -92,9 +92,9 @@ $this->entityManager = $entityManager;
                 $orderDetails->setTotal($product['product']->getPrice() * $product['quantity']);
                 $this->entityManager->persist($orderDetails);
             }
-            
-            $this->entityManager->flush();
-              
+
+            //$this->entityManager->flush();
+
             return $this->render('order/add.html.twig', [
                 'cart' => $cart->getFull(),
                 'carrier' => $carriers,
