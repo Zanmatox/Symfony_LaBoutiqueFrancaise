@@ -93,7 +93,7 @@ $this->entityManager = $entityManager;
                 $this->entityManager->persist($orderDetails);
             }
             
-            //$this->entityManager->flush();
+            $this->entityManager->flush();
               
             return $this->render('order/add.html.twig', [
                 'cart' => $cart->getFull(),
