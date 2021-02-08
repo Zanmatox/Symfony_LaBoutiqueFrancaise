@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Classe\Mail;
 use App\Form\RegisterType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,7 @@ class RegisterController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
             $search_email = $this->entityManager->getRepository(User::class)->findOneByEmail($user->getEmail());
-            if (!search_email) 
+            if (!$search_email) 
             {
                 $password = $encoder->encodePassword($user,$user->getPassword());
                 $user->setPassword($password);
